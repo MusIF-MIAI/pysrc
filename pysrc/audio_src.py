@@ -7,12 +7,10 @@ import time
 from datetime import datetime
 import calendar
 
-#Ideated, made and coded by Trainax
+HIGH_BIT_FREQ = 2500. #Logical level 1
+LOW_BIT_FREQ = 2000.  #Logical level 0
 
-HIGH_BIT_FREQ = 2500. #Livello logico 1
-LOW_BIT_FREQ = 2000.  #Livello logico 0
-
-BEEP_FREQ = 1000. #Beep di riferimento acustico
+BEEP_FREQ = 1000. #Acoustic reference beep
 
 def get_frame(bits):
     wave = None
@@ -56,25 +54,25 @@ def segment_two(bits):
 
 
 def audio_src(date):
-    p1, p2, avviso =  generate_packet(date)
+    p1, p2, warning =  generate_packet(date)
 
-    anno=date.year
-    oggi=date.day
-    ora=date.hour
-    minuti=date.minute
-    mese=date.month
+    year=date.year
+    day_number_in_month=date.day
+    hours=date.hour
+    minutes=date.minute
+    month=date.month
 
     global p3
     p3=0
 
-    if(avviso != "00"):
-        if((avviso == "10" and mese == 1 and oggi == 1 and ora == 0 and minuti == 59) or (avviso == "10" and mese == 7 and oggi == 1 and ora == 1 and minuti == 59)):
+    if(warning != "00"):
+        if((warning == "10" and month == 1 and day_number_in_month == 1 and hours == 0 and minutes == 59) or (warning == "10" and month == 7 and day_number_in_month == 1 and hours == 1 and minutes == 59)):
             p3=2
-        elif((avviso == "11" and mese == 1 and oggi == 1 and ora == 0 and minuti == 59) or (avviso == "11" and mese == 7 and oggi == 1 and ora == 1 and minuti == 59)):
+        elif((warning == "11" and month == 1 and day_number_in_month == 1 and hours == 0 and minutes == 59) or (warning == "11" and month == 7 and day_number_in_month == 1 and hours == 1 and minutes == 59)):
             p3=1
 
 
-    if(p3==0): #Tutto normale
+    if(p3==0): #Everything is normal
         return chain(
             segment_one(p1),
             segment_two(p2),
@@ -86,7 +84,7 @@ def audio_src(date):
             silent_wave(),
             beep_wave2()
             )
-    elif(p3==2): #Minuto da 61 secondi
+    elif(p3==2): #Leap second inserted
         return chain(
             segment_one(p1),
             segment_two(p2),
@@ -100,7 +98,7 @@ def audio_src(date):
             beep_wave2()
             )
 
-    elif(p3==1): #Minuto da 59 secondi (Molto improbabile!)
+    elif(p3==1): #Leap second subtracted (Very unlikely!)
         return chain(
             segment_one(p1),
             segment_two(p2),

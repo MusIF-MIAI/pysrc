@@ -11,6 +11,6 @@ setup(
     author_email="andreamilazzo@mancausoft.org",
     url="https://github.com/MusIF-MIAI/pysrc",
     version="0.0.1",
-    description="Utilities to generate Segnale orario RAI Codificato (SRC)",
+    description="Utilities to generate the Segnale orario RAI Codificato (SRC)",
     packages=find_packages(),
     install_requires=reqs)
