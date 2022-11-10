@@ -1,7 +1,7 @@
 from wavebender import sine_wave, compute_samples, write_wavefile
 from itertools import chain, islice
 
-from src import generate_packet
+from pysrc.src import generate_packet
 
 import time
 from datetime import datetime
@@ -39,7 +39,7 @@ def silent_wave():
 
 
 def generate_wave(frequency=BEEP_FREQ, framerate=44100, amplitude=1, duration=0.03):
-    return islice(sine_wave(frequency, framerate, amplitude), duration*framerate)
+    return islice(sine_wave(frequency, framerate, amplitude), int(duration*framerate))
 
 
 def segment_one(bits):

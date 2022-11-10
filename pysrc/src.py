@@ -16,8 +16,11 @@ leap_second_warning = "00"
 def generate_bit(value, weights):
     bits = ""
     for weight in weights:
-        bits += str(value/weight)
-        value %= weight
+        if int(value/weight) == 1:
+            bits = bits + "1"
+            value=value-weight
+        else:
+            bits=bits+"0"
     return bits
 
 
@@ -57,11 +60,11 @@ def generate_first_segment(date):
     first_segment += generate_hour_bit(date.hour) #Hour bits
     first_segment += generate_minute_bit(date.minute) #Minutes bits
     first_segment += is_dst(date) #Time bits (0=Standard time, 1=Summer time)
-    first_segment +=  str((sum([int(b) for b in first_segment]) +1) % 2) #P1: First parity bit of the first segment
+    first_segment += str((sum([int(b) for b in first_segment]) +1) % 2) #P1: First parity bit of the first segment
     first_segment += generate_month_bit(date.month) #Month bits
     first_segment += generate_day_bit(date.day) #Day bits
     first_segment += generate_weekday_bit(date.weekday()) #Bits for the day of the week
-    first_segment +=  str((sum([int(b) for b in first_segment[17:]]) +1) % 2) #P2: Second parity bit of the first segment
+    first_segment += str((sum([int(b) for b in first_segment[17:]]) +1) % 2) #P2: Second parity bit of the first segment
     return first_segment #Return of the first segment
 
 
